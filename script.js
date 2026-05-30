@@ -38,16 +38,62 @@ function getVisibleHeroVideo() {
   });
 }
 
-function playVisibleHeroVideo() {
-  const video = getVisibleHeroVideo();
+function prepareAutoplayVideo(video) {
   if (!video) return;
 
+  video.autoplay = true;
   video.muted = true;
   video.defaultMuted = true;
   video.playsInline = true;
+  video.setAttribute("autoplay", "");
+  video.setAttribute("muted", "");
+  video.setAttribute("playsinline", "");
+  video.setAttribute("webkit-playsinline", "");
   video.removeAttribute("controls");
+}
+
+function markHeroVideoReady(video) {
+  video?.classList.add("is-loaded");
+}
+
+document.querySelectorAll(".hero-video").forEach((video) => {
+  video.addEventListener("loadeddata", () => markHeroVideoReady(video), { once: true });
+  video.addEventListener("canplay", () => markHeroVideoReady(video), { once: true });
+  video.addEventListener("playing", () => markHeroVideoReady(video), { once: true });
+});
+
+function playHeroVideo(video) {
+  if (!video) return;
+
+  prepareAutoplayVideo(video);
   video.play().catch(() => {
     video.removeAttribute("controls");
+  });
+}
+
+function playVisibleHeroVideo() {
+  playHeroVideo(getVisibleHeroVideo());
+}
+
+function startHeroVideoAutoplay() {
+  const visibleVideo = getVisibleHeroVideo();
+
+  if (visibleVideo) {
+    prepareAutoplayVideo(visibleVideo);
+
+    if (visibleVideo.readyState === 0) {
+      visibleVideo.load();
+    }
+
+    if (visibleVideo.readyState >= 2) {
+      markHeroVideoReady(visibleVideo);
+    }
+
+    playHeroVideo(visibleVideo);
+  }
+
+  document.querySelectorAll(".hero-video").forEach((video) => {
+    prepareAutoplayVideo(video);
   });
 }
 
@@ -73,7 +119,8 @@ window.addEventListener("resize", updateFixedElements);
 updateFixedElements();
 
 document.querySelectorAll("[data-scroll-target]").forEach((button) => {
-  button.addEventListener("click", () => {
+  button.addEventListener("click", (event) => {
+    event.stopPropagation();
     const target = document.querySelector(button.dataset.scrollTarget);
     target?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
@@ -162,17 +209,22 @@ document.addEventListener("keydown", (event) => {
 });
 
 document.querySelectorAll("video[autoplay]").forEach((video) => {
-  video.muted = true;
-  video.defaultMuted = true;
-  video.playsInline = true;
-  video.setAttribute("muted", "");
-  video.setAttribute("playsinline", "");
-  video.setAttribute("webkit-playsinline", "");
-  video.removeAttribute("controls");
-  video.play().catch(() => {
-    video.removeAttribute("controls");
-  });
+  prepareAutoplayVideo(video);
+  video.play().catch(() => {});
 });
+
+document.addEventListener("DOMContentLoaded", startHeroVideoAutoplay);
+window.addEventListener("load", startHeroVideoAutoplay);
+window.addEventListener("pageshow", startHeroVideoAutoplay);
+window.addEventListener("resize", startHeroVideoAutoplay);
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) startHeroVideoAutoplay();
+});
+
+setTimeout(startHeroVideoAutoplay, 250);
+setTimeout(startHeroVideoAutoplay, 1000);
+setTimeout(startHeroVideoAutoplay, 2400);
+startHeroVideoAutoplay();
 
 document.addEventListener("touchstart", playVisibleHeroVideo, { once: true, passive: true });
 document.addEventListener("pointerdown", playVisibleHeroVideo, { once: true });

@@ -37,8 +37,8 @@
           loop
           playsinline
           webkit-playsinline
-          preload="metadata"
-          poster="assets/images/hero-poster-desktop.jpg"
+          preload="auto"
+          disablepictureinpicture
           aria-hidden="true"
         >
           <source src="assets/video/hero-desktop.mp4" type="video/mp4">
@@ -51,8 +51,8 @@
           loop
           playsinline
           webkit-playsinline
-          preload="metadata"
-          poster="assets/images/hero-poster-mobile.jpg"
+          preload="auto"
+          disablepictureinpicture
           aria-hidden="true"
         >
           <source src="assets/video/hero-mobile.mp4" type="video/mp4">
@@ -61,10 +61,10 @@
         <div class="hero-content">
           <h1 class="hero-name">JD Hopper</h1>
           <ul class="hero-roles hero-credentials" aria-label="Professional credentials">
-            <li>Founder of a Nationwide Tutoring Firm</li>
-            <li>President of the Largest Public Speaking Organization in the Carolinas</li>
-            <li>Guest Lecturer at the Top Private Schools in Charlotte, NC</li>
-            <li>Speaker at Conferences, Workshops, Company Events, and Functions</li>
+            <li><button type="button" data-scroll-target="#purpose">Founder of a Nationwide Tutoring Firm</button></li>
+            <li><button type="button" data-scroll-target="#toastmasters">President of the Largest Public Speaking Organization in the Carolinas</button></li>
+            <li><button type="button" data-scroll-target="#speaking">Guest Lecturer at the Top Private Schools in Charlotte, NC</button></li>
+            <li><button type="button" data-scroll-target="#speaking">Speaker at Conferences, Workshops, Company Events, and Functions</button></li>
           </ul>
           <p class="hero-click-prompt">CLICK TO LEARN MORE</p>
           <!-- [PASTE HERO BOOKING LINE HERE] -->
@@ -101,6 +101,7 @@
         </picture>
         <div class="section-overlay"></div>
         <article class="glass-panel story-panel reveal-item">
+          <img class="toastmasters-logo" src="assets/images/toastmasters-logo.png" alt="Toastmasters International logo" loading="lazy">
           <h2 id="toastmasters-title">Queen City Toastmasters</h2>
           <!-- [PASTE QUEEN CITY TOASTMASTERS PRESIDENCY STORY HERE] -->
           <div class="expandable-story" data-expandable>
